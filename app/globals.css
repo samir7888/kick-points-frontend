@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: 200 21% 95%;
+  --foreground: 198 44% 10%;
+  --surface: 0 0% 100%;
+  /* `brand` is the filled-action token (#53fc18) and always carries dark text;
+     `primary` is the accent/text token and is darkened for AA on light surfaces. */
+  --primary: 115 93% 24%;
+  --primary-foreground: 0 0% 100%;
+  --brand: 104 97% 54%;
+  --brand-foreground: 220 25% 5%;
+  --muted: 196 16% 90%;
+  --muted-foreground: 199 15% 37%;
+  --border: 195 18% 81%;
+  --amber: 38 89% 53%;
+  --win: 145 55% 36%;
+  --loss: 355 65% 55%;
+}
+.dark {
+  --background: 202 37% 7%;
+  --foreground: 195 22% 93%;
+  --surface: 202 37% 12%;
+  /* Kick's volt green reads at 13.6:1 on the dark background, so it works for
+     both fills and accent text here. */
+  --primary: 104 97% 54%;
+  --primary-foreground: 220 25% 5%;
+  --brand: 104 97% 54%;
+  --brand-foreground: 220 25% 5%;
+  --muted: 202 29% 17%;
+  --muted-foreground: 197 13% 73%;
+  --border: 201 22% 25%;
+  --amber: 38 89% 58%;
+  --win: 145 55% 48%;
+  --loss: 355 70% 66%;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background: hsl(var(--background)); color: hsl(var(--foreground)); }
+button, a, input, select { outline-offset: 3px; }
+:focus-visible { outline: 3px solid hsl(var(--primary)); }
+::selection { background: hsl(var(--primary) / 0.2); }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
