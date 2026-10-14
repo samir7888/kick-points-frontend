@@ -4,7 +4,7 @@ import { useCallback } from "react";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
 import { api, getMe } from "./client";
 import { keys } from "./keys";
-import type { BillingStatus, Channel, ChannelStatsSummary, Me, Page, Prediction, QrPayment, Settings, Vote } from "./types";
+import type { BillingStatus, Channel, ChannelStatsSummary, Me, Page, PointsHistory, Prediction, QrPayment, Settings, Vote } from "./types";
 
 export function useMe(initialData?: Me) { return useQuery({ queryKey: keys.me, queryFn: getMe, retry: false, initialData }); }
 export function useChannels() { return useQuery({ queryKey: keys.channels, queryFn: () => api.get<Channel[]>("/channels") }); }
@@ -29,6 +29,16 @@ export function useHistory(id: string, query: string) {
 }
 export function useStats(id: string) {
   return useQuery({ queryKey: keys.stats(id), queryFn: () => api.get<Record<string, number | string | null>>(`/channels/${id}/stats`), enabled: Boolean(id) });
+}
+/**
+ * Points growth for the caller. `range` is one of `1h`, `24h`, `7d`, `30d`;
+ * `channelId` narrows the series to one channel, leave it empty for the combined
+ * total. Kept `enabled` so pages that don't show points don't fetch it.
+ */
+export function usePointsHistory(range: string, channelId = "", enabled = true) {
+  const params = new URLSearchParams({ range });
+  if (channelId) params.set("channel_id", channelId);
+  return useQuery({ queryKey: keys.points(range, channelId), queryFn: () => api.get<PointsHistory>(`/points/history?${params}`), enabled });
 }
 export function useRefreshAll() {
   const cache = useQueryClient();

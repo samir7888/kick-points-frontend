@@ -440,6 +440,31 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/points/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Points History
+         * @description Channel-points growth for the caller, aggregated over ``range``.
+         *
+         *     ``range`` is one of ``1h``, ``24h``, ``7d`` or ``30d``. Returns per-channel
+         *     series, a combined total series, and headline totals. Growth exists only from
+         *     the first recorded snapshot, so a freshly added channel starts with a single
+         *     point.
+         */
+        get: operations["points_history_api_v1_points_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/channels/{channel_id}/predictions": {
         parameters: {
             query?: never;
@@ -1460,6 +1485,40 @@ export interface operations {
             path: {
                 payment_id: number;
             };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    points_history_api_v1_points_history_get: {
+        parameters: {
+            query?: {
+                range?: "1h" | "24h" | "7d" | "30d";
+                channel_id?: number | null;
+            };
+            header?: never;
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;

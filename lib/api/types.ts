@@ -33,6 +33,19 @@ export type ChannelStatsSummary = {
   totals: ChannelStats;
   channels: Array<ChannelStats & { channel_id: number; slug: string }>;
 };
+export type PointsRange = "1h" | "24h" | "7d" | "30d";
+export type PointsSeriesPoint = { at: string; total: number };
+export type PointsChannelGrowth = {
+  channel_id: number; slug: string; current: number; start: number; growth: number;
+  series: Array<{ at: string; balance: number }>;
+};
+export type PointsHistory = {
+  range: PointsRange;
+  bucket: string;
+  totals: { current: number; start: number; growth: number; growth_pct: number | null; snapshots: number };
+  series: PointsSeriesPoint[];
+  channels: PointsChannelGrowth[];
+};
 export type QrPaymentStatus = "pending" | "confirmed" | "rejected";
 export type QrPayment = {
   id: number;

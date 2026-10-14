@@ -51,3 +51,7 @@ export function SettingsSkeleton() {
 export function BillingSkeleton() {
   return <LoadingRegion label="Loading billing details"><HeadingSkeleton /><Card className="max-w-2xl space-y-5 p-6"><Skeleton className="h-6 w-24 rounded-md" /><Skeleton className="h-9 w-56" /><Skeleton className="h-4 w-72 max-w-full" /><Skeleton className="h-10 w-48" /></Card></LoadingRegion>;
 }
+
+export function PointsSkeleton() {
+  return <LoadingRegion label="Loading your points growth"><HeadingSkeleton /><StatCardsSkeleton count={4} /><Card className="space-y-4 p-5"><Skeleton className="h-4 w-40" /><Skeleton className="h-44 w-full" /></Card></LoadingRegion>;
+}

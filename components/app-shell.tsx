@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { toast } from "sonner";
-import { BarChart3, CreditCard, LayoutDashboard, LogOut, Shield, SlidersHorizontal, UserRound, Tv2 } from "lucide-react";
+import { BarChart3, CreditCard, LayoutDashboard, LogOut, Shield, SlidersHorizontal, TrendingUp, UserRound, Tv2 } from "lucide-react";
 import { useMe } from "@/lib/api/hooks";
 import { api } from "@/lib/api/client";
 import { messageForError } from "@/lib/api/errors";
@@ -13,7 +13,7 @@ import { Button } from "./ui";
 import { KickAuthButton } from "./kick-auth-button";
 
 const nav = [
-  ["/dashboard", "Dashboard", LayoutDashboard], ["/channels", "Channels", Tv2], ["/votes", "Votes", BarChart3], ["/settings", "Settings", SlidersHorizontal], ["/billing", "Billing", CreditCard], ["/account", "Account", UserRound]
+  ["/dashboard", "Dashboard", LayoutDashboard], ["/channels", "Channels", Tv2], ["/points", "Points", TrendingUp], ["/votes", "Votes", BarChart3], ["/settings", "Settings", SlidersHorizontal], ["/billing", "Billing", CreditCard], ["/account", "Account", UserRound]
 ] as const;
 export function AppShell({ children, initialMe }: { children: React.ReactNode; initialMe?: import("@/lib/api/types").Me }) {
   const { data: me, isLoading, isError, refetch } = useMe(initialMe);
@@ -45,7 +45,7 @@ export function AppShell({ children, initialMe }: { children: React.ReactNode; i
       {(me.token_health === "needs_reauth" || me.token_health === "disconnected") && <div className="border-b border-amber/50 bg-amber/10 px-4 py-3 text-sm md:px-8" role="status">Reconnect Kick to keep automatic voting active. <KickAuthButton nextPath={pathname} label="Reconnect Kick" variant="ghost" className="ml-1 h-auto min-h-0 px-1 py-0 font-semibold underline" /></div>}
       {me.voting_paused && <div className="border-b border-loss/30 bg-loss/10 px-4 py-3 text-sm md:px-8" role="status">Voting is paused while we fix a Kick connection problem. Your settings are safe.</div>}
       <main className="mx-auto max-w-7xl px-4 py-7 pb-24 md:px-8 lg:pb-10">{children}</main>
-      <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-4 border-t border-border bg-surface/95 px-1 py-2 backdrop-blur lg:hidden" aria-label="Mobile navigation">{links.map(([href, label, Icon]) => <Link key={href} href={href} className={`flex flex-col items-center gap-1 px-1 py-1 text-[10px] ${pathname.startsWith(href) ? "font-semibold text-primary" : "text-muted-foreground"}`}><Icon size={18} /><span>{label}</span></Link>)}</nav>
+      <nav className="fixed inset-x-0 bottom-0 z-30 flex gap-1 overflow-x-auto border-t border-border bg-surface/95 px-2 py-2 backdrop-blur lg:hidden" aria-label="Mobile navigation">{links.map(([href, label, Icon]) => <Link key={href} href={href} className={`flex min-w-[64px] flex-1 flex-col items-center gap-1 px-1 py-1 text-[10px] ${pathname.startsWith(href) ? "font-semibold text-primary" : "text-muted-foreground"}`}><Icon size={18} /><span>{label}</span></Link>)}</nav>
     </div>
   </div>;
 }

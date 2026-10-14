@@ -21,3 +21,7 @@ The green accent is a deliberate, product-owner-approved deviation from the orig
 ## UI components
 
 `components.json` is configured for the shadcn New York style. Shared UI pieces use Tailwind and Radix primitives with shadcn-compatible CSS variables.
+
+## Points charts
+
+The points page renders two Recharts views in `components/points-chart.tsx`: an area chart of the points total over the selected range (a line is the right read for a value over time) and a donut of each channel's share of the current total (a part-to-whole read). The range selector offers Last hour, Last 24 hours, Last 7 days and Last 30 days; the backend buckets short ranges by hour (or 5 minutes for the last hour) and day ranges by day. The chart module exports pure `formatBucket`/`toTrendData`/`toShareData` helpers so the data shaping is unit-tested without rendering the library. Growth is shown by direction and coloured `win`/`loss` and always stated as a signed value, never by colour alone. The area chart enables Recharts' `accessibilityLayer` (keyboard navigation) and the same numbers are also printed as text on the page.

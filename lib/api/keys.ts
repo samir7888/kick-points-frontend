@@ -5,6 +5,7 @@ export const keys = {
   settings: ["settings"] as const, billing: ["billing", "status"] as const,
   qrPayments: ["billing", "qr-payments"] as const,
   votes: (query: string) => ["votes", query] as const,
+  points: (range: string, channelId: string) => ["points", range, channelId] as const,
   history: (channelId: string, query: string) => ["history", channelId, query] as const,
   stats: (id: string) => ["stats", id] as const
 };

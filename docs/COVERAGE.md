@@ -17,6 +17,7 @@
 | `GET /channels/{id}/predictions` | Done | Detail page filters; cursor exposed by response |
 | `GET /channels/{id}/predictions/{prediction_id}` | Done | Opens the accessible prediction detail dialog |
 | `GET /channels/{id}/stats` | Done | Detail stats and dashboard aggregate |
+| `GET /points/history` | Done | Points page (range + channel filters, trend area chart and share donut) and dashboard growth card |
 | `GET /predictions/active` | Done | Dashboard and Predictions |
 | `GET /votes` | Done | Votes filters and loaded-row CSV |
 | `GET, PUT /settings` | Done | Settings form and persistence |
