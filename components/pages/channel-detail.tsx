@@ -200,7 +200,7 @@ function ChannelDetail({ id }: { id: string }) {
               </div>
               {p.my_vote && (
                 <p className="mt-4 inline-flex rounded-lg bg-muted px-3 py-2 text-xs">
-                  Your vote: {p.my_vote.outcome_id} ·{" "}
+                  Your vote: {p.my_vote.outcome_title ?? p.my_vote.outcome_id} ·{" "}
                   {p.my_vote.amount_placed ?? p.my_vote.amount_requested} points
                   {p.my_vote.points_delta !== null
                     ? ` · ${p.my_vote.points_delta > 0 ? "+" : ""}${p.my_vote.points_delta} points`
