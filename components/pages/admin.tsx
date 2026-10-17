@@ -93,7 +93,6 @@ function AdminPage() {
           "Queue depth": overview.queue_depth,
           "Queue lag (seconds)": overview.queue_lag_seconds,
           "Canary failures": overview.canary_failures,
-          "Pending webhooks": overview.unprocessed_webhooks,
           "Circuit breaker": overview.circuit_breaker,
         }).map(([label, value]) => (
           <Card key={label} className="p-4">

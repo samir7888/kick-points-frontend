@@ -1,25 +1,20 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
 import { format, formatDistanceToNow } from "date-fns";
 import {
   CheckCircle2,
-  CircleAlert,
   QrCode,
   RefreshCw,
   UploadCloud,
 } from "lucide-react";
 import { toast } from "sonner";
-import { api } from "@/lib/api/client";
 import { ApiError, messageForError } from "@/lib/api/errors";
 import { useBilling, useQrPayments } from "@/lib/api/hooks";
 import { env } from "@/lib/env";
-import type { BillingStatus } from "@/lib/api/types";
-import { Badge, Button, Card, Loading } from "@/components/ui";
+import { Badge, Button, Card } from "@/components/ui";
 import { BillingSkeleton } from "@/components/skeletons";
-import { ErrorBox, Heading, useRefresh } from "@/components/pages/shared";
+import { ErrorBox, Heading } from "@/components/pages/shared";
 
 /**
  * Manual QR / bank-transfer payment method for people who can't pay by card.
@@ -105,7 +100,7 @@ function BillingQrPanel() {
         </div>
         <p className="mt-2 text-sm text-muted-foreground">
           Your account already has Premium, so there’s no need to send another
-          payment. Manage your plan from the billing card above.
+          payment.
         </p>
       </Card>
     );
@@ -121,8 +116,7 @@ function BillingQrPanel() {
         {awaitingReview && <Badge>Awaiting confirmation</Badge>}
       </div>
       <p className="mt-2 text-sm text-muted-foreground">
-        Don’t have an international card? Scan the QR with your bank app,
-        transfer the equivalent of{" "}
+        Scan the QR with your bank app, transfer the equivalent of{" "}
         <span className="font-semibold text-foreground">
           NPR {env.premiumPrice} / month
         </span>
@@ -135,7 +129,7 @@ function BillingQrPanel() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/qr.png"
-            alt="Bank account QR code made by the billing page"
+            alt="Bank account QR code for payment"
             className="h-44 w-44 rounded-xl border border-border bg-white p-2"
           />
           <p className="mt-2 text-center text-xs text-muted-foreground">
@@ -244,32 +238,8 @@ function BillingQrPanel() {
 
 function BillingPage() {
   const billing = useBilling();
-  async function checkout() {
-    try {
-      const result = await api.post<{ checkout_url: string }>(
-        "/billing/checkout",
-      );
-      window.location.assign(result.checkout_url);
-    } catch (error) {
-      toast.error(
-        `${messageForError(error)} Contact support if the problem continues.`,
-      );
-    }
-  }
-  async function portal() {
-    try {
-      const result = await api.post<{ portal_url: string | null }>(
-        "/billing/portal",
-      );
-      if (result.portal_url) window.location.assign(result.portal_url);
-      else toast.message("No active subscription to manage.");
-    } catch (error) {
-      toast.error(
-        `${messageForError(error)} Contact support if the problem continues.`,
-      );
-    }
-  }
   if (billing.isLoading) return <BillingSkeleton />;
+  const isPremium = billing.data?.plan === "premium";
   return (
     <>
       <Heading title="Billing" description="Your plan and payment details." />
@@ -279,32 +249,17 @@ function BillingPage() {
         <Card className="max-w-2xl p-6">
           <div className="flex items-start justify-between">
             <div>
-              <Badge>
-                {billing.data?.plan === "premium" ? "Premium" : "Free plan"}
-              </Badge>
+              <Badge>{isPremium ? "Premium" : "Free plan"}</Badge>
               <h2 className="mt-4 font-display text-3xl font-semibold">
-                {billing.data?.plan === "premium"
-                  ? "Up to 6 channels"
-                  : "1 channel"}
+                {isPremium ? "Up to 6 channels" : "1 channel"}
               </h2>
               <p className="mt-2 text-sm text-muted-foreground">
-                {billing.data?.status.replaceAll("_", " ")}
-                {billing.data?.premium_until
-                  ? ` · Premium until ${format(new Date(billing.data.premium_until), "PPP")}`
-                  : ""}
+                {isPremium
+                  ? billing.data?.premium_until
+                    ? `Premium until ${format(new Date(billing.data.premium_until), "PPP")}`
+                    : "Premium is active"
+                  : "Upgrade with a QR payment below to monitor up to 6 channels."}
               </p>
-              {billing.data?.status === "past_due" && (
-                <p className="mt-2 max-w-lg text-sm">
-                  Your renewal needs attention. Premium access may be temporary
-                  while payment is resolved; update your payment details to keep
-                  your channels.
-                </p>
-              )}
-              {billing.data?.cancel_at_period_end && (
-                <p className="mt-2 text-sm">
-                  Your plan cancels at the end of this billing period.
-                </p>
-              )}
             </div>
             <p className="font-display text-2xl font-semibold">
               ${(billing.data?.price_display ?? env.premiumPrice).toFixed(2)}
@@ -314,23 +269,8 @@ function BillingPage() {
               </span>
             </p>
           </div>
-          <div className="mt-7 flex gap-3">
-            {billing.data?.plan === "premium" ? (
-              <Button variant="secondary" onClick={() => void portal()}>
-                Manage billing
-              </Button>
-            ) : (
-              <Button onClick={() => void checkout()}>
-                Upgrade to Premium
-              </Button>
-            )}
-            <Link href="/pricing">
-              <Button variant="ghost">Compare plans</Button>
-            </Link>
-          </div>
           <p className="mt-6 text-xs text-muted-foreground">
-            Checkout is hosted by Dodo Payments. Your plan changes only after
-            payment confirmation.
+            Premium is activated after we verify your QR payment below.
           </p>
         </Card>
       )}
@@ -339,193 +279,4 @@ function BillingPage() {
   );
 }
 
-/**
- * Landing page for Dodo's checkout `return_url`. Dodo sends every outcome
- * (success and failure) here, so a failed `status` is forwarded to `/failed`.
- * Premium is never granted from this redirect: we only poll the server, which
- * reflects the signature-verified webhook.
- */
-function BillingSuccess() {
-  const search = useSearchParams();
-  const router = useRouter();
-  const refresh = useRefresh();
-  const status = (search.get("status") ?? "").toLowerCase();
-  const failedStatus = ["failed", "expired", "cancelled", "canceled"].includes(
-    status,
-  );
-  const [phase, setPhase] = useState<"confirming" | "active" | "pending">(
-    "confirming",
-  );
-
-  useEffect(() => {
-    if (failedStatus) {
-      router.replace(status ? `/failed?status=${status}` : "/failed");
-    }
-  }, [failedStatus, router, status]);
-
-  useEffect(() => {
-    if (failedStatus) return;
-    let cancelled = false;
-    const deadline = Date.now() + 60_000;
-    async function check(): Promise<boolean> {
-      try {
-        const result = await api.get<BillingStatus>("/billing/status");
-        if (cancelled) return true;
-        if (result.plan === "premium") {
-          setPhase("active");
-          toast.success("Premium is active");
-          await refresh();
-          return true;
-        }
-        if (Date.now() > deadline) {
-          setPhase("pending");
-          return true;
-        }
-      } catch {
-        if (!cancelled) setPhase("pending");
-        return true;
-      }
-      return false;
-    }
-    void check();
-    const timer = setInterval(() => {
-      void check().then((done) => {
-        if (done) clearInterval(timer);
-      });
-    }, 3000);
-    return () => {
-      cancelled = true;
-      clearInterval(timer);
-    };
-  }, [failedStatus, refresh]);
-
-  if (failedStatus) return <Loading label="Checking your payment result" />;
-
-  return (
-    <>
-      <Heading
-        title={
-          phase === "active" ? "Premium is active" : "Confirming your payment"
-        }
-        description="Premium unlocks up to 6 channels."
-      />
-      <Card className="max-w-xl p-6">
-        {phase === "confirming" && (
-          <div
-            className="flex items-start gap-3"
-            role="status"
-            aria-live="polite"
-          >
-            <RefreshCw size={18} className="mt-0.5 animate-spin" aria-hidden />
-            <div>
-              <p className="font-semibold">Confirming your payment…</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                This usually takes a few seconds. You can stay on this page.
-              </p>
-            </div>
-          </div>
-        )}
-        {phase === "active" && (
-          <div
-            className="flex items-start gap-3"
-            role="status"
-            aria-live="polite"
-          >
-            <CheckCircle2 size={20} className="mt-0.5 text-win" aria-hidden />
-            <div>
-              <p className="font-semibold">Thanks for upgrading.</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                You can now add up to 6 channels. Your plan renews monthly until
-                you cancel.
-              </p>
-            </div>
-          </div>
-        )}
-        {phase === "pending" && (
-          <div
-            className="flex items-start gap-3"
-            role="status"
-            aria-live="polite"
-          >
-            <CircleAlert size={20} className="mt-0.5 text-amber" aria-hidden />
-            <div>
-              <p className="font-semibold">Your payment is still processing.</p>
-              <p className="mt-1 text-sm text-muted-foreground">
-                Your plan updates as soon as it is confirmed. Nothing else is
-                needed from you.
-              </p>
-            </div>
-          </div>
-        )}
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Link href="/channels">
-            <Button>Go to channels</Button>
-          </Link>
-          <Link href="/billing">
-            <Button variant="secondary">View billing</Button>
-          </Link>
-        </div>
-      </Card>
-    </>
-  );
-}
-
-/** Result page for a declined, expired, or cancelled checkout. */
-function BillingFailed() {
-  const search = useSearchParams();
-  const refresh = useRefresh();
-  const status = (search.get("status") ?? "").toLowerCase();
-  const expired = status === "expired";
-  const [retrying, setRetrying] = useState(false);
-
-  useEffect(() => {
-    void refresh();
-  }, [refresh]);
-
-  async function tryAgain() {
-    setRetrying(true);
-    try {
-      const result = await api.post<{ checkout_url: string }>(
-        "/billing/checkout",
-      );
-      window.location.assign(result.checkout_url);
-    } catch (error) {
-      setRetrying(false);
-      toast.error(
-        `${messageForError(error)} Contact support if the problem continues.`,
-      );
-    }
-  }
-
-  return (
-    <>
-      <Heading title="Payment not completed" description="Nothing was charged." />
-      <Card className="max-w-xl p-6">
-        <div className="flex items-start gap-3" role="alert">
-          <CircleAlert size={20} className="mt-0.5 text-loss" aria-hidden />
-          <div>
-            <p className="font-semibold">
-              {expired
-                ? "That checkout session expired."
-                : "The payment did not go through."}
-            </p>
-            <p className="mt-1 text-sm text-muted-foreground">
-              {expired
-                ? "Start a new checkout to upgrade. Your account and channels are unchanged."
-                : "Your card was declined or the checkout was closed. Start again, or use a different payment method."}
-            </p>
-          </div>
-        </div>
-        <div className="mt-6 flex flex-wrap gap-3">
-          <Button onClick={() => void tryAgain()} disabled={retrying}>
-            {retrying ? "Starting checkout…" : "Try again"}
-          </Button>
-          <Link href="/billing">
-            <Button variant="secondary">Back to billing</Button>
-          </Link>
-        </div>
-      </Card>
-    </>
-  );
-}
-export { BillingFailed, BillingPage, BillingSuccess };
+export { BillingPage };

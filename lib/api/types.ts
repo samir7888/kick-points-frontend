@@ -24,7 +24,7 @@ export type Prediction = {
 };
 export type Page<T> = { items: T[]; page: number; limit: number; total: number; pages: number };
 export type Settings = { default_vote_amount: number; fallback_to_min: boolean; paused: boolean; kick_session_token_set: boolean; kick_session_token_valid?: boolean | null; kick_session_token_message?: string | null };
-export type BillingStatus = { plan: Plan; premium_until: string | null; cancel_at_period_end: boolean; status: string; price_display: number };
+export type BillingStatus = { plan: Plan; premium_until: string | null; status: string; price_display: number };
 export type ChannelStats = {
   votes_placed: number; votes_won: number; votes_lost: number;
   win_rate: number; net_points: number; last_vote_at: string | null;
@@ -55,6 +55,7 @@ export type QrPayment = {
   reference: string | null;
   amount: number | null;
   status: QrPaymentStatus;
+  proof_url: string | null;
   created_at: string | null;
   decided_at: string | null;
 };

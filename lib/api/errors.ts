@@ -13,17 +13,6 @@ export function messageForError(error: unknown): string {
     if (error.status === 422) return error.message || "Check the highlighted details and try again.";
     if (error.status === 429) return "Too many requests. Try again in a moment.";
     if (error.status === 503) return "Voting is paused while we fix a Kick connection problem. Your settings are safe.";
-    if (error.status === 502 && error.code === "BILLING_ERROR") {
-      const details = error.details as { provider_message?: string; provider_status?: number } | undefined;
-      const provider = details?.provider_message;
-      const fallback =
-        "Billing is temporarily unavailable. Check your payment provider settings and try again.";
-      if (provider) {
-        const firstLine = provider.split(".").find((part) => part.trim().length)?.trim() ?? provider;
-        return `${error.message} — ${firstLine}.`;
-      }
-      return error.message || fallback;
-    }
     return error.message || "The request could not be completed.";
   }
   return "We couldn’t reach the service. Check your connection and retry.";

@@ -21,14 +21,17 @@
 | `GET /predictions/active` | Done | Dashboard and Predictions |
 | `GET /votes` | Done | Votes filters and loaded-row CSV |
 | `GET, PUT /settings` | Done | Settings form and persistence |
-| `POST /billing/checkout` | Done | Hosted checkout |
-| `POST /billing/portal` | Done | Billing management |
-| `GET /billing/status` | Done | Billing state, `/success` return polling, `/failed` result page |
-| `POST /webhooks/dodo` | Not surfaced | Server-to-server only |
+| `GET /billing/status` | Done | Billing state (plan, Premium expiry) on `/billing` |
+| `POST /billing/qr-payments` | Done | Upload a transfer screenshot from `/billing` |
+| `GET /billing/qr-payments` | Done | Caller's submission history on `/billing` |
+| `GET /qr-payments` | Done | Admin review list on `/payments` (password-gated) |
+| `GET /qr-payments/{id}/proof` | Done | Admin proof image on `/payments` (password-gated) |
+| `POST /qr-payments/{id}/confirm` | Done | Admin confirms and grants Premium |
+| `POST /qr-payments/{id}/reject` | Done | Admin rejects a submission |
 | `GET /stream` | Done | App-shell EventSource, retry, invalidation |
 | `GET /healthz`, `/readyz` | Done | Public status and admin readiness |
 | `POST /admin/kill-switch` | Done | Admin control with typed confirmation |
 | `GET /admin/overview` | Done | Admin overview |
 | `GET /metrics` | Not surfaced | Infrastructure-only Prometheus endpoint |
 
-The backend marks `/healthz` and `/readyz` with `include_in_schema=False`; they are confirmed from router code and queried directly. Other path types come from generated OpenAPI. Protected routes validate `/me` server-side and forward the incoming cookie. Real Kick listener behavior and Dodo test-mode outcomes remain backend integration concerns; mocks cover the UI.
+The backend marks `/healthz` and `/readyz` with `include_in_schema=False`; they are confirmed from router code and queried directly. Other path types come from generated OpenAPI. Protected routes validate `/me` server-side and forward the incoming cookie. Real Kick listener behavior remains a backend integration concern; mocks cover the UI.

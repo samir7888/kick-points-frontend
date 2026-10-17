@@ -5,11 +5,7 @@ import { usePathname } from "next/navigation";
 import { Loading } from "@/components/ui";
 import { AccountPage } from "@/components/pages/account";
 import { AdminPage } from "@/components/pages/admin";
-import {
-  BillingFailed,
-  BillingPage,
-  BillingSuccess,
-} from "@/components/pages/billing";
+import { BillingPage } from "@/components/pages/billing";
 import { ChannelDetail } from "@/components/pages/channel-detail";
 import { ChannelsPage } from "@/components/pages/channels";
 import { Dashboard } from "@/components/pages/dashboard";
@@ -33,10 +29,6 @@ function AppContent() {
       return <SettingsPage />;
     case "billing":
       return <BillingPage />;
-    case "success":
-      return <BillingSuccess />;
-    case "failed":
-      return <BillingFailed />;
     case "account":
       return <AccountPage />;
     case "admin":

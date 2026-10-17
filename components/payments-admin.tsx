@@ -48,15 +48,21 @@ async function passwordsApi<T>(
 
 function ProofImage({
   paymentId,
+  proofUrl,
   password,
 }: {
   paymentId: number;
+  /** Cloudinary secure URL when the proof is hosted there. */
+  proofUrl: string | null;
   password: string;
 }) {
   const [url, setUrl] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    // Cloudinary-hosted proofs render straight from the CDN; only older proofs
+    // still saved on disk need the password-gated fetch below.
+    if (proofUrl) return;
     let cancelled = false;
     async function load() {
       try {
@@ -82,13 +88,14 @@ function ProofImage({
     return () => {
       cancelled = true;
     };
-  }, [paymentId, password]);
+  }, [paymentId, password, proofUrl]);
 
-  if (url)
+  const source = proofUrl ?? url;
+  if (source)
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
-        src={url}
+        src={source}
         alt={`Payment proof ${paymentId}`}
         className="max-h-64 w-full rounded-lg border border-border object-contain"
       />
@@ -296,8 +303,13 @@ export function PaymentsAdmin() {
                 <div className="space-y-2">
                   <p className="text-xs font-medium text-muted-foreground">
                     Payment proof
+                    {item.proof_url ? " · hosted" : ""}
                   </p>
-                  <ProofImage paymentId={item.id} password={password} />
+                  <ProofImage
+                    paymentId={item.id}
+                    proofUrl={item.proof_url}
+                    password={password}
+                  />
                 </div>
                 <div className="flex flex-col justify-end gap-2 lg:items-end">
                   {item.status === "pending" && (

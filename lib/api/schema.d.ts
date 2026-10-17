@@ -4,18 +4,35 @@
  */
 
 export interface paths {
-    "/api/v1/auth/kick/login": {
+    "/api/v1/admin/kill-switch": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
+        get?: never;
+        put?: never;
         /**
-         * Kick Login
-         * @description Redirect user to Kick OAuth authorize endpoint.
+         * Set Kill Switch
+         * @description Enable or disable the global voting kill switch.
          */
-        get: operations["kick_login_api_v1_auth_kick_login_get"];
+        post: operations["set_kill_switch_api_v1_admin_kill_switch_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/overview": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Admin Overview */
+        get: operations["admin_overview_api_v1_admin_overview_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -44,6 +61,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/auth/kick/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Kick Login
+         * @description Redirect user to Kick OAuth authorize endpoint.
+         */
+        get: operations["kick_login_api_v1_auth_kick_login_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/logout": {
         parameters: {
             query?: never;
@@ -61,34 +98,24 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/billing/checkout": {
+    "/api/v1/billing/qr-payments": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
+        /**
+         * List My Qr Payments
+         * @description Return the current user's QR payment submissions, newest first.
+         */
+        get: operations["list_my_qr_payments_api_v1_billing_qr_payments_get"];
         put?: never;
-        /** Create Checkout */
-        post: operations["create_checkout_api_v1_billing_checkout_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/billing/portal": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** Billing Portal */
-        post: operations["billing_portal_api_v1_billing_portal_post"];
+        /**
+         * Submit a payment proof for the scanned QR
+         * @description Save the user's proof and start a pending review.
+         */
+        post: operations["submit_qr_payment_api_v1_billing_qr_payments_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -102,30 +129,13 @@ export interface paths {
             path?: never;
             cookie?: never;
         };
-        /** Billing Status */
+        /**
+         * Billing Status
+         * @description Return the caller's current plan and Premium expiry.
+         */
         get: operations["billing_status_api_v1_billing_status_get"];
         put?: never;
         post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/webhooks/dodo": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Receive a Dodo Payments webhook
-         * @description Verifies the raw request signature, deduplicates by provider webhook ID, and queues processing. Invalid signatures return 401.
-         */
-        post: operations["dodo_webhook_api_v1_webhooks_dodo_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -147,6 +157,26 @@ export interface paths {
         put?: never;
         /** Create Channel */
         post: operations["create_channel_api_v1_channels_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/channels/amounts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        /**
+         * Bulk Update Amounts
+         * @description Bulk update vote amounts atomically.
+         */
+        put: operations["bulk_update_amounts_api_v1_channels_amounts_put"];
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -196,273 +226,6 @@ export interface paths {
         head?: never;
         /** Patch Channel */
         patch: operations["patch_channel_api_v1_channels__channel_id__patch"];
-        trace?: never;
-    };
-    "/api/v1/channels/amounts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        /**
-         * Bulk Update Amounts
-         * @description Bulk update vote amounts atomically.
-         */
-        put: operations["bulk_update_amounts_api_v1_channels_amounts_put"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Me */
-        get: operations["get_me_api_v1_me_get"];
-        put?: never;
-        post?: never;
-        /**
-         * Delete Me
-         * @description Soft-delete user, revoke tokens, cancel Dodo subscription.
-         */
-        delete: operations["delete_me_api_v1_me_delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/me/kick-connection": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /**
-         * Disconnect Kick
-         * @description Revoke Kick tokens and pause all channels.
-         */
-        delete: operations["disconnect_kick_api_v1_me_kick_connection_delete"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/metrics": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Prometheus metrics
-         * @description Prometheus metrics endpoint restricted to administrators.
-         */
-        get: operations["metrics_api_v1_metrics_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/stream": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Sse Stream
-         * @description Server-Sent Events stream for the authenticated user.
-         */
-        get: operations["sse_stream_api_v1_stream_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/kill-switch": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Set Kill Switch
-         * @description Enable or disable the global voting kill switch.
-         */
-        post: operations["set_kill_switch_api_v1_admin_kill_switch_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/admin/overview": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Admin Overview */
-        get: operations["admin_overview_api_v1_admin_overview_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/billing/qr-payments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List My Qr Payments
-         * @description Return the current user's QR payment submissions, newest first.
-         */
-        get: operations["list_my_qr_payments_api_v1_billing_qr_payments_get"];
-        put?: never;
-        /**
-         * Submit a payment proof for the scanned QR
-         * @description Save the user's proof and start a pending review.
-         */
-        post: operations["submit_qr_payment_api_v1_billing_qr_payments_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/qr-payments": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * List QR payment submissions (admin, password-gated)
-         * @description Return every QR payment submission, newest first, for the /payments page.
-         */
-        get: operations["list_qr_payments_api_v1_qr_payments_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/qr-payments/{payment_id}/proof": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Serve a payment proof image (admin, password-gated)
-         * @description Return the stored screenshot for a submission.
-         */
-        get: operations["qr_payment_proof_api_v1_qr_payments__payment_id__proof_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/qr-payments/{payment_id}/confirm": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Confirm a QR payment (admin, password-gated)
-         * @description Confirm the transfer and grant one month of Premium.
-         */
-        post: operations["confirm_qr_payment_api_v1_qr_payments__payment_id__confirm_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/qr-payments/{payment_id}/reject": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Reject a QR payment (admin, password-gated)
-         * @description Reject the submission; Premium is not granted.
-         */
-        post: operations["reject_qr_payment_api_v1_qr_payments__payment_id__reject_post"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/v1/points/history": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Points History
-         * @description Channel-points growth for the caller, aggregated over ``range``.
-         *
-         *     ``range`` is one of ``1h``, ``24h``, ``7d`` or ``30d``. Returns per-channel
-         *     series, a combined total series, and headline totals. Growth exists only from
-         *     the first recorded snapshot, so a freshly added channel starts with a single
-         *     point.
-         */
-        get: operations["points_history_api_v1_points_history_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
         trace?: never;
     };
     "/api/v1/channels/{channel_id}/predictions": {
@@ -521,6 +284,92 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Me */
+        get: operations["get_me_api_v1_me_get"];
+        put?: never;
+        post?: never;
+        /**
+         * Delete Me
+         * @description Soft-delete user and revoke tokens.
+         */
+        delete: operations["delete_me_api_v1_me_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/kick-connection": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /**
+         * Disconnect Kick
+         * @description Revoke Kick tokens and pause all channels.
+         */
+        delete: operations["disconnect_kick_api_v1_me_kick_connection_delete"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/metrics": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Prometheus metrics
+         * @description Prometheus metrics endpoint restricted to administrators.
+         */
+        get: operations["metrics_api_v1_metrics_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/points/history": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Points History
+         * @description Channel-points growth for the caller, aggregated over ``range``.
+         *
+         *     ``range`` is one of ``1h``, ``24h``, ``7d`` or ``30d``. Returns per-channel
+         *     series, a combined total series, and headline totals. Growth exists only from
+         *     the first recorded snapshot, so a freshly added channel starts with a single
+         *     point.
+         */
+        get: operations["points_history_api_v1_points_history_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/predictions/active": {
         parameters: {
             query?: never;
@@ -530,6 +379,127 @@ export interface paths {
         };
         /** Active Predictions */
         get: operations["active_predictions_api_v1_predictions_active_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/qr-payments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List QR payment submissions (admin, password-gated)
+         * @description Return every QR payment submission, newest first, for the /payments page.
+         */
+        get: operations["list_qr_payments_api_v1_qr_payments_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/qr-payments/{payment_id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Confirm a QR payment (admin, password-gated)
+         * @description Confirm the transfer and grant one month of Premium.
+         */
+        post: operations["confirm_qr_payment_api_v1_qr_payments__payment_id__confirm_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/qr-payments/{payment_id}/proof": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Serve a payment proof image (admin, password-gated)
+         * @description Return the stored screenshot for a submission.
+         *
+         *     Cloudinary-hosted proofs redirect to their secure URL; proofs saved before
+         *     Cloudinary was configured are streamed from disk as before.
+         */
+        get: operations["qr_payment_proof_api_v1_qr_payments__payment_id__proof_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/qr-payments/{payment_id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Reject a QR payment (admin, password-gated)
+         * @description Reject the submission; Premium is not granted.
+         */
+        post: operations["reject_qr_payment_api_v1_qr_payments__payment_id__reject_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get Settings Endpoint */
+        get: operations["get_settings_endpoint_api_v1_settings_get"];
+        /** Update Settings */
+        put: operations["update_settings_api_v1_settings_put"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/stream": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Sse Stream
+         * @description Server-Sent Events stream for the authenticated user.
+         */
+        get: operations["sse_stream_api_v1_stream_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -558,24 +528,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/v1/settings": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Get Settings Endpoint */
-        get: operations["get_settings_endpoint_api_v1_settings_get"];
-        /** Update Settings */
-        put: operations["update_settings_api_v1_settings_put"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/healthz": {
         parameters: {
             query?: never;
@@ -588,26 +540,6 @@ export interface paths {
          * @description Basic health check endpoint.
          */
         get: operations["health_check_healthz_get"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/readyz": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /**
-         * Readiness Check
-         * @description Readiness check that verifies dependencies.
-         */
-        get: operations["readiness_check_readyz_get"];
         put?: never;
         post?: never;
         delete?: never;
@@ -636,6 +568,26 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/readyz": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Readiness Check
+         * @description Readiness check that verifies dependencies.
+         */
+        get: operations["readiness_check_readyz_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -650,6 +602,11 @@ export interface components {
         /** Body_submit_qr_payment_api_v1_billing_qr_payments_post */
         Body_submit_qr_payment_api_v1_billing_qr_payments_post: {
             /**
+             * Amount
+             * @description Optional reported amount
+             */
+            amount?: number | null;
+            /**
              * Proof
              * @description Transfer screenshot
              */
@@ -659,11 +616,6 @@ export interface components {
              * @description Optional transfer reference
              */
             reference?: string | null;
-            /**
-             * Amount
-             * @description Optional reported amount
-             */
-            amount?: number | null;
         };
         /** BulkAmountBody */
         BulkAmountBody: {
@@ -689,10 +641,10 @@ export interface components {
         };
         /** PatchChannelBody */
         PatchChannelBody: {
-            /** Vote Amount */
-            vote_amount?: number | null;
             /** Enabled */
             enabled?: boolean | null;
+            /** Vote Amount */
+            vote_amount?: number | null;
         };
         /** SettingsBody */
         SettingsBody: {
@@ -700,23 +652,23 @@ export interface components {
             default_vote_amount?: number | null;
             /** Fallback To Min */
             fallback_to_min?: boolean | null;
-            /** Paused */
-            paused?: boolean | null;
             /** Kick Session Token */
             kick_session_token?: string | null;
+            /** Paused */
+            paused?: boolean | null;
         };
         /** ValidationError */
         ValidationError: {
+            /** Context */
+            ctx?: Record<string, never>;
+            /** Input */
+            input?: unknown;
             /** Location */
             loc: (string | number)[];
             /** Message */
             msg: string;
             /** Error Type */
             type: string;
-            /** Input */
-            input?: unknown;
-            /** Context */
-            ctx?: Record<string, never>;
         };
         /**
          * VoteStatus
@@ -733,9 +685,68 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    kick_login_api_v1_auth_kick_login_get: {
+    set_kill_switch_api_v1_admin_kill_switch_post: {
         parameters: {
-            query?: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["KillSwitchBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    admin_overview_api_v1_admin_overview_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+        };
+    };
+    kick_callback_api_v1_auth_kick_callback_get: {
+        parameters: {
+            query: {
+                code: string;
+                state: string;
                 limit?: number;
                 window?: number;
             };
@@ -765,11 +776,9 @@ export interface operations {
             };
         };
     };
-    kick_callback_api_v1_auth_kick_callback_get: {
+    kick_login_api_v1_auth_kick_login_get: {
         parameters: {
-            query: {
-                code: string;
-                state: string;
+            query?: {
                 limit?: number;
                 window?: number;
             };
@@ -821,7 +830,7 @@ export interface operations {
             };
         };
     };
-    create_checkout_api_v1_billing_checkout_post: {
+    list_my_qr_payments_api_v1_billing_qr_payments_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -843,14 +852,18 @@ export interface operations {
             };
         };
     };
-    billing_portal_api_v1_billing_portal_post: {
+    submit_qr_payment_api_v1_billing_qr_payments_post: {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        requestBody?: never;
+        requestBody: {
+            content: {
+                "multipart/form-data": components["schemas"]["Body_submit_qr_payment_api_v1_billing_qr_payments_post"];
+            };
+        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -861,6 +874,15 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -883,53 +905,6 @@ export interface operations {
                     "application/json": {
                         [key: string]: unknown;
                     };
-                };
-            };
-        };
-    };
-    dodo_webhook_api_v1_webhooks_dodo_post: {
-        parameters: {
-            query?: never;
-            header?: {
-                "webhook-id"?: string | null;
-                "webhook-signature"?: string | null;
-                "webhook-timestamp"?: string | null;
-            };
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Webhook accepted or already processed */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-            /** @description Malformed webhook payload or missing headers */
-            400: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Webhook signature verification failed */
-            401: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
                 };
             };
         };
@@ -971,6 +946,41 @@ export interface operations {
         responses: {
             /** @description Successful Response */
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    bulk_update_amounts_api_v1_channels_amounts_put: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["BulkAmountBody"];
+            };
+        };
+        responses: {
+            /** @description Successful Response */
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1116,18 +1126,88 @@ export interface operations {
             };
         };
     };
-    bulk_update_amounts_api_v1_channels_amounts_put: {
+    list_channel_predictions_api_v1_channels__channel_id__predictions_get: {
+        parameters: {
+            query?: {
+                page?: number;
+                limit?: number;
+                status?: string | null;
+                voted?: boolean | null;
+            };
+            header?: never;
+            path: {
+                channel_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    get_prediction_api_v1_channels__channel_id__predictions__prediction_id__get: {
         parameters: {
             query?: never;
             header?: never;
-            path?: never;
+            path: {
+                channel_id: number;
+                prediction_id: number;
+            };
             cookie?: never;
         };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["BulkAmountBody"];
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
             };
         };
+    };
+    channel_stats_api_v1_channels__channel_id__stats_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                channel_id: number;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             /** @description Successful Response */
             200: {
@@ -1237,38 +1317,17 @@ export interface operations {
             };
         };
     };
-    sse_stream_api_v1_stream_get: {
+    points_history_api_v1_points_history_get: {
         parameters: {
-            query?: never;
+            query?: {
+                range?: "1h" | "24h" | "7d" | "30d";
+                channel_id?: number | null;
+            };
             header?: never;
             path?: never;
             cookie?: never;
         };
         requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": unknown;
-                };
-            };
-        };
-    };
-    set_kill_switch_api_v1_admin_kill_switch_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "application/json": components["schemas"]["KillSwitchBody"];
-            };
-        };
         responses: {
             /** @description Successful Response */
             200: {
@@ -1292,7 +1351,7 @@ export interface operations {
             };
         };
     };
-    admin_overview_api_v1_admin_overview_get: {
+    active_predictions_api_v1_predictions_active_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1309,64 +1368,7 @@ export interface operations {
                 content: {
                     "application/json": {
                         [key: string]: unknown;
-                    };
-                };
-            };
-        };
-    };
-    list_my_qr_payments_api_v1_billing_qr_payments_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-        };
-    };
-    submit_qr_payment_api_v1_billing_qr_payments_post: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody: {
-            content: {
-                "multipart/form-data": components["schemas"]["Body_submit_qr_payment_api_v1_billing_qr_payments_post"];
-            };
-        };
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
+                    }[];
                 };
             };
         };
@@ -1379,6 +1381,42 @@ export interface operations {
                 "x-payments-password"?: string | null;
             };
             path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    confirm_qr_payment_api_v1_qr_payments__payment_id__confirm_post: {
+        parameters: {
+            query?: never;
+            header?: {
+                /** @description Password for the /payments review page */
+                "x-payments-password"?: string | null;
+            };
+            path: {
+                payment_id: number;
+            };
             cookie?: never;
         };
         requestBody?: never;
@@ -1439,42 +1477,6 @@ export interface operations {
             };
         };
     };
-    confirm_qr_payment_api_v1_qr_payments__payment_id__confirm_post: {
-        parameters: {
-            query?: never;
-            header?: {
-                /** @description Password for the /payments review page */
-                "x-payments-password"?: string | null;
-            };
-            path: {
-                payment_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
     reject_qr_payment_api_v1_qr_payments__payment_id__reject_post: {
         parameters: {
             query?: never;
@@ -1485,203 +1487,6 @@ export interface operations {
             path: {
                 payment_id: number;
             };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    points_history_api_v1_points_history_get: {
-        parameters: {
-            query?: {
-                range?: "1h" | "24h" | "7d" | "30d";
-                channel_id?: number | null;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    list_channel_predictions_api_v1_channels__channel_id__predictions_get: {
-        parameters: {
-            query?: {
-                page?: number;
-                limit?: number;
-                status?: string | null;
-                voted?: boolean | null;
-            };
-            header?: never;
-            path: {
-                channel_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    get_prediction_api_v1_channels__channel_id__predictions__prediction_id__get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                channel_id: number;
-                prediction_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    channel_stats_api_v1_channels__channel_id__stats_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                channel_id: number;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    };
-                };
-            };
-            /** @description Validation Error */
-            422: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HTTPValidationError"];
-                };
-            };
-        };
-    };
-    active_predictions_api_v1_predictions_active_get: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description Successful Response */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        [key: string]: unknown;
-                    }[];
-                };
-            };
-        };
-    };
-    list_votes_api_v1_votes_get: {
-        parameters: {
-            query?: {
-                channel_id?: number | null;
-                status?: components["schemas"]["VoteStatus"] | null;
-                page?: number;
-                limit?: number;
-            };
-            header?: never;
-            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -1765,6 +1570,62 @@ export interface operations {
             };
         };
     };
+    sse_stream_api_v1_stream_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    list_votes_api_v1_votes_get: {
+        parameters: {
+            query?: {
+                channel_id?: number | null;
+                status?: components["schemas"]["VoteStatus"] | null;
+                page?: number;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        [key: string]: unknown;
+                    };
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
     health_check_healthz_get: {
         parameters: {
             query?: never;
@@ -1787,7 +1648,7 @@ export interface operations {
             };
         };
     };
-    readiness_check_readyz_get: {
+    metrics_metrics_get: {
         parameters: {
             query?: never;
             header?: never;
@@ -1807,7 +1668,7 @@ export interface operations {
             };
         };
     };
-    metrics_metrics_get: {
+    readiness_check_readyz_get: {
         parameters: {
             query?: never;
             header?: never;
