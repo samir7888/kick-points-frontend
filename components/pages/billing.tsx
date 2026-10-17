@@ -262,7 +262,7 @@ function BillingPage() {
               </p>
             </div>
             <p className="font-display text-2xl font-semibold">
-              ${(billing.data?.price_display ?? env.premiumPrice).toFixed(2)}
+              NPR {(billing.data?.price_display ?? env.premiumPrice).toFixed(2)}
               <span className="text-xs font-normal text-muted-foreground">
                 {" "}
                 / month
